@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>BoardVerse — Classic Board Games</title>
+<meta name="description" content="Play Ludo and Snake & Ladder online. BoardVerse – a premium board game experience."/>
+<link rel="stylesheet" href="style.css"/>
+<style>
+main{position:relative;z-index:1}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:5rem 1.5rem 3rem;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;z-index:0;
+  background:radial-gradient(ellipse 80% 70% at 50% 40%,rgba(240,180,41,.07) 0%,transparent 65%),
+  radial-gradient(ellipse 50% 60% at 80% 60%,rgba(49,130,206,.06) 0%,transparent 60%)}
+.particle{position:absolute;border-radius:50%;background:var(--gold);animation:float linear infinite}
+.hero-badge{position:relative;z-index:1;display:inline-flex;align-items:center;gap:.5rem;
+  background:rgba(240,180,41,.1);border:1px solid var(--border2);border-radius:50px;
+  padding:.36rem 1.1rem;font-size:.78rem;font-weight:600;color:var(--gold);letter-spacing:.07em;
+  text-transform:uppercase;margin-bottom:1.5rem;animation:fadeUp .6s var(--ease) .1s both}
+.hero-title{position:relative;z-index:1;font-family:var(--r);font-size:clamp(3.2rem,10vw,7.5rem);
+  font-weight:900;line-height:1;letter-spacing:-.02em;margin-bottom:1.2rem;
+  background:linear-gradient(135deg,var(--gold-d) 0%,var(--gold) 40%,var(--gold-l) 70%,var(--gold) 100%);
+  background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation:fadeUp .7s var(--ease) .2s both,shimmer 4s linear 1s infinite}
+.hero-sub{position:relative;z-index:1;font-size:clamp(.95rem,2.5vw,1.25rem);color:var(--txt2);
+  max-width:500px;margin:0 auto 2.5rem;line-height:1.7;animation:fadeUp .7s var(--ease) .35s both}
+.hero-actions{position:relative;z-index:1;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;animation:fadeUp .7s var(--ease) .5s both}
+.stats{position:relative;z-index:1;display:flex;justify-content:center;gap:3rem;
+  padding:2.2rem 1.5rem;border-top:1px solid var(--border);border-bottom:1px solid var(--border);flex-wrap:wrap}
+.stat-num{font-family:var(--r);font-size:2rem;font-weight:700;color:var(--gold)}
+.stat-lbl{font-size:.75rem;color:var(--txt3);letter-spacing:.06em;text-transform:uppercase;margin-top:.2rem}
+.games-section{position:relative;z-index:1;padding:5rem 1.5rem;text-align:center}
+.sec-lbl{font-size:.75rem;font-weight:600;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.6rem}
+.sec-title{font-family:var(--r);font-size:clamp(1.8rem,5vw,3rem);font-weight:700;margin-bottom:.7rem}
+.sec-sub{color:var(--txt2);font-size:.95rem;max-width:460px;margin:0 auto 3rem}
+.games-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;max-width:780px;margin:0 auto}
+.game-card{background:var(--bg-card);border:1px solid var(--border);border-radius:22px;overflow:hidden;
+  transition:all .38s var(--ease);cursor:pointer;box-shadow:0 8px 32px rgba(0,0,0,.4);position:relative}
+.game-card:hover{transform:translateY(-10px);border-color:var(--border2);box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 40px rgba(240,180,41,.12)}
+.card-prev{width:100%;aspect-ratio:1.35;display:flex;align-items:center;justify-content:center;background:var(--bg-el);overflow:hidden}
+.card-body{padding:1.4rem 1.6rem 1.8rem}
+.card-badge{display:inline-block;background:rgba(240,180,41,.12);border:1px solid var(--border2);
+  border-radius:50px;padding:.2rem .75rem;font-size:.68rem;font-weight:700;color:var(--gold);letter-spacing:.07em;text-transform:uppercase;margin-bottom:.7rem}
+.card-title{font-family:var(--r);font-size:1.6rem;font-weight:700;margin-bottom:.45rem}
+.card-desc{font-size:.85rem;color:var(--txt2);line-height:1.6;margin-bottom:1.3rem}
+.card-foot{display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap}
+.card-players{font-size:.76rem;color:var(--txt3)}
+.feats{position:relative;z-index:1;padding:3.5rem 1.5rem 5rem}
+.feats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.4rem;max-width:940px;margin:2.5rem auto 0}
+.feat{background:rgba(26,34,64,.5);border:1px solid var(--border);border-radius:16px;padding:1.5rem;text-align:center;transition:.28s}
+.feat:hover{border-color:var(--border2);transform:translateY(-4px)}
+.feat-icon{font-size:2rem;margin-bottom:.8rem}
+.feat-title{font-family:var(--r);font-size:1rem;font-weight:600;margin-bottom:.35rem}
+.feat-desc{font-size:.8rem;color:var(--txt2);line-height:1.55}
+</style>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <a href="index.html" class="nav-logo">Board<span style="-webkit-text-fill-color:var(--txt2);font-family:var(--s);font-size:.9rem;font-weight:400;margin-left:3px">Verse</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="ludo.html">Ludo</a></li>
+    <li><a href="snakes.html">Snake &amp; Ladder</a></li>
+    <li><button class="nav-links-btn sound-toggle" onclick="toggleSound()" aria-label="Toggle Sound" aria-pressed="false">🔇 Sound Off</button></li>
+    <li><button class="nav-links-btn" onclick="document.body.classList.toggle('high-contrast')" aria-label="Toggle High Contrast">🌓 Contrast</button></li>
+    <li><a href="ludo.html" class="nav-cta">Play Now</a></li>
+  </ul>
+  <div class="nav-ham" id="ham"><span></span><span></span><span></span></div>
+</nav>
+
+<main class="page-in">
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div id="particles" style="position:absolute;inset:0;pointer-events:none;z-index:0"></div>
+    <div class="hero-badge">✦ The Premium Board Game Experience</div>
+    <h1 class="hero-title">BoardVerse</h1>
+    <p class="hero-sub">Where classic board games meet modern luxury. Roll the dice, outwit your rivals, and claim the throne.</p>
+    <div class="hero-actions">
+      <a href="ludo.html" class="btn btn-gold">🎲 &nbsp;Play Ludo</a>
+      <a href="snakes.html" class="btn btn-outline">Snake &amp; Ladder ↗</a>
+    </div>
+  </section>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-num">2</div><div class="stat-lbl">Classic Games</div></div>
+    <div class="stat"><div class="stat-num">4</div><div class="stat-lbl">Players Max</div></div>
+    <div class="stat"><div class="stat-num">∞</div><div class="stat-lbl">Hours of Fun</div></div>
+    <div class="stat"><div class="stat-num">100%</div><div class="stat-lbl">Free to Play</div></div>
+  </div>
+
+  <section class="games-section">
+    <p class="sec-lbl">Our Collection</p>
+    <h2 class="sec-title">Choose Your Game</h2>
+    <p class="sec-sub">Two timeless classics reimagined with a touch of luxury.</p>
+    <div class="games-grid">
+      <div class="game-card" onclick="location.href='ludo.html'">
+        <div class="card-prev">
+          <svg width="170" height="170" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <rect width="200" height="200" fill="#0d1b35"/>
+            <rect x="2" y="2" width="86" height="86" fill="#FF475728" rx="4" stroke="#FF4757" stroke-width="1.5"/>
+            <rect x="112" y="2" width="86" height="86" fill="#2ED57328" rx="4" stroke="#2ED573" stroke-width="1.5"/>
+            <rect x="2" y="112" width="86" height="86" fill="#FFD16628" rx="4" stroke="#FFD166" stroke-width="1.5"/>
+            <rect x="112" y="112" width="86" height="86" fill="#5DADE228" rx="4" stroke="#5DADE2" stroke-width="1.5"/>
+            <rect x="72" y="72" width="56" height="56" fill="#F0B42918" stroke="#F0B429" stroke-width="1.5" rx="4"/>
+            <polygon points="100,78 126,122 74,122" fill="#F0B429" opacity=".7"/>
+            <circle cx="30" cy="30" r="10" fill="#FF4757"/><circle cx="30" cy="30" r="5" fill="#fff" opacity=".4"/>
+            <circle cx="58" cy="30" r="10" fill="#FF4757"/><circle cx="58" cy="30" r="5" fill="#fff" opacity=".4"/>
+            <circle cx="30" cy="58" r="10" fill="#FF4757"/><circle cx="30" cy="58" r="5" fill="#fff" opacity=".4"/>
+            <circle cx="58" cy="58" r="10" fill="#FF4757"/><circle cx="58" cy="58" r="5" fill="#fff" opacity=".4"/>
+            <circle cx="142" cy="30" r="10" fill="#2ED573"/><circle cx="142" cy="30" r="5" fill="#fff" opacity=".4"/>
+            <circle cx="170" cy="30" r="10" fill="#2ED573"/><circle cx="170" cy="30" r="5" fill="#fff" opacity=".4"/>
+            <circle cx="142" cy="58" r="10" fill="#2ED573"/><circle cx="142" cy="58" r="5" fill="#fff" opacity=".4"/>
+            <circle cx="170" cy="58" r="10" fill="#2ED573"/><circle cx="170" cy="58" r="5" fill="#fff" opacity=".4"/>
+            <circle cx="30" cy="142" r="10" fill="#FFD166"/><circle cx="30" cy="142" r="5" fill="#fff" opacity=".4"/>
+            <circle cx="58" cy="142" r="10" fill="#FFD166"/><circle cx="58" cy="142" r="5" fill="#fff" opacity=".4"/>
+            <circle cx="30" cy="170" r="10" fill="#FFD166"/><circle cx="30" cy="170" r="5" fill="#fff" opacity=".4"/>
+            <circle cx="58" cy="170" r="10" fill="#FFD166"/><circle cx="58" cy="170" r="5" fill="#fff" opacity=".4"/>
+            <circle cx="142" cy="142" r="10" fill="#5DADE2"/><circle cx="142" cy="142" r="5" fill="#fff" opacity=".4"/>
+            <circle cx="170" cy="142" r="10" fill="#5DADE2"/><circle cx="170" cy="142" r="5" fill="#fff" opacity=".4"/>
+            <circle cx="142" cy="170" r="10" fill="#5DADE2"/><circle cx="142" cy="170" r="5" fill="#fff" opacity=".4"/>
+            <circle cx="170" cy="170" r="10" fill="#5DADE2"/><circle cx="170" cy="170" r="5" fill="#fff" opacity=".4"/>
+          </svg>
+        </div>
+        <div class="card-body">
+          <span class="card-badge">2–4 Players</span>
+          <h3 class="card-title">Ludo</h3>
+          <p class="card-desc">Race all four tokens from home to the center. Capture rivals, dodge attacks, and triumph with strategy and luck.</p>
+          <div class="card-foot">
+            <span class="card-players">👥 Up to 4 players</span>
+            <a href="ludo.html" class="btn btn-gold btn-sm">Play Now →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-card" onclick="location.href='snakes.html'">
+        <div class="card-prev">
+          <svg width="170" height="170" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <rect width="200" height="200" fill="#0d1b35"/>
+            <g fill="#1A2240" stroke="#F0B42918" stroke-width=".5">
+              <rect x="2" y="2" width="36" height="36" rx="3"/><rect x="42" y="2" width="36" height="36" rx="3"/>
+              <rect x="82" y="2" width="36" height="36" rx="3"/><rect x="122" y="2" width="36" height="36" rx="3"/>
+              <rect x="162" y="2" width="36" height="36" rx="3"/>
+              <rect x="2" y="42" width="36" height="36" rx="3"/><rect x="42" y="42" width="36" height="36" rx="3"/>
+              <rect x="82" y="42" width="36" height="36" rx="3"/><rect x="122" y="42" width="36" height="36" rx="3"/>
+              <rect x="162" y="42" width="36" height="36" rx="3"/>
+              <rect x="2" y="82" width="36" height="36" rx="3"/><rect x="42" y="82" width="36" height="36" rx="3"/>
+              <rect x="82" y="82" width="36" height="36" rx="3"/><rect x="122" y="82" width="36" height="36" rx="3"/>
+              <rect x="162" y="82" width="36" height="36" rx="3"/>
+              <rect x="2" y="122" width="36" height="36" rx="3"/><rect x="42" y="122" width="36" height="36" rx="3"/>
+              <rect x="82" y="122" width="36" height="36" rx="3"/><rect x="122" y="122" width="36" height="36" rx="3"/>
+              <rect x="162" y="122" width="36" height="36" rx="3"/>
+              <rect x="2" y="162" width="36" height="36" rx="3"/><rect x="42" y="162" width="36" height="36" rx="3"/>
+              <rect x="82" y="162" width="36" height="36" rx="3"/><rect x="122" y="162" width="36" height="36" rx="3"/>
+              <rect x="162" y="162" width="36" height="36" rx="3"/>
+            </g>
+            <path d="M180 20 Q160 60 140 80 Q110 110 80 130 Q60 150 40 170" stroke="#FF4757" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <path d="M100 20 Q80 55 100 90 Q120 125 100 165" stroke="#E53E3E" stroke-width="4" fill="none" stroke-linecap="round" opacity=".7"/>
+            <line x1="20" y1="160" x2="60" y2="80" stroke="#F0B429" stroke-width="4"/><line x1="30" y1="160" x2="70" y2="80" stroke="#F0B429" stroke-width="4"/>
+            <line x1="20" y1="148" x2="70" y2="93" stroke="#F0B429" stroke-width="2"/><line x1="22" y1="134" x2="68" y2="105" stroke="#F0B429" stroke-width="2"/>
+            <line x1="140" y1="155" x2="180" y2="75" stroke="#F0B429" stroke-width="4"/><line x1="150" y1="155" x2="188" y2="78" stroke="#F0B429" stroke-width="4"/>
+            <line x1="141" y1="143" x2="187" y2="90" stroke="#F0B429" stroke-width="2"/><line x1="143" y1="130" x2="186" y2="104" stroke="#F0B429" stroke-width="2"/>
+            <circle cx="180" cy="18" r="7" fill="#FF4757"/><circle cx="177" cy="15" r="2" fill="#fff"/>
+            <circle cx="100" cy="18" r="7" fill="#E53E3E" opacity=".85"/><circle cx="97" cy="15" r="2" fill="#fff" opacity=".85"/>
+            <circle cx="20" cy="180" r="7" fill="#FF4757"/><circle cx="60" cy="180" r="7" fill="#2ED573"/>
+            <circle cx="100" cy="180" r="7" fill="#FFD166"/><circle cx="140" cy="180" r="7" fill="#5DADE2"/>
+          </svg>
+        </div>
+        <div class="card-body">
+          <span class="card-badge">2–4 Players</span>
+          <h3 class="card-title">Snake &amp; Ladder</h3>
+          <p class="card-desc">Climb ladders of fortune and slide down serpents of fate. Every roll is a twist in this race to 100.</p>
+          <div class="card-foot">
+            <span class="card-players">👥 Up to 4 players</span>
+            <a href="snakes.html" class="btn btn-gold btn-sm">Play Now →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="feats">
+    <div style="text-align:center"><p class="sec-lbl">Why BoardVerse?</p><h2 class="sec-title">Crafted for Champions</h2></div>
+    <div class="feats-grid">
+      <div class="feat"><div class="feat-icon">🎲</div><div class="feat-title">Classic Rules</div><div class="feat-desc">Faithful implementation of original game rules for an authentic experience.</div></div>
+      <div class="feat"><div class="feat-icon">🏆</div><div class="feat-title">4-Player Support</div><div class="feat-desc">Pass-and-play with up to 4 friends on the same device.</div></div>
+      <div class="feat"><div class="feat-icon">✨</div><div class="feat-title">Luxury Design</div><div class="feat-desc">A stunning jewel-toned dark aesthetic that makes every session feel like royalty.</div></div>
+      <div class="feat"><div class="feat-icon">📱</div><div class="feat-title">Fully Responsive</div><div class="feat-desc">Seamlessly adapts from widescreen monitors to the smallest mobile screens.</div></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span class="f-logo">BoardVerse</span>
+  <span class="f-text">© 2026 BoardVerse — Crafted with ♟️ and ✨</span>
+  <nav class="f-links"><a href="ludo.html">Ludo</a><a href="snakes.html">Snake &amp; Ladder</a></nav>
+</footer>
+
+<script>
+"use strict";
+const nav=document.getElementById('navbar');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>40));
+document.getElementById('ham').addEventListener('click',()=>document.getElementById('navLinks').classList.toggle('open'));
+const pc=document.getElementById('particles');
+for(let i=0;i<16;i++){const p=document.createElement('div');p.className='particle';const s=Math.random()*4+2;
+p.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}%;top:${Math.random()*100}%;position:absolute;
+animation-duration:${6+Math.random()*8}s;animation-delay:${Math.random()*5}s;opacity:${.08+Math.random()*.2}`;pc.appendChild(p);}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const links = document.querySelectorAll('a:not([target="_blank"]):not([href^="#"])');
+  links.forEach(link => {
+    link.addEventListener('click', e => {
+      const href = link.getAttribute('href');
+      if (href && href.endsWith('.html')) {
+        e.preventDefault();
+        const main = document.querySelector('main');
+        if (main) {
+          main.classList.add('page-out');
+          setTimeout(() => {
+            window.location.href = href;
+          }, 300);
+        } else {
+          window.location.href = href;
+        }
+      }
+    });
+  });
+});
+</script>
+<script src="audio.js"></script>
+</body>
+</html>

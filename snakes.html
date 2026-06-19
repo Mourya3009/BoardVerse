@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Snake &amp; Ladder — BoardVerse</title>
+<meta name="description" content="Play Snake and Ladder online with up to 4 players on BoardVerse."/>
+<link rel="stylesheet" href="style.css"/>
+<style>
+.g-sidebar{display:flex;flex-direction:column;gap:.9rem}
+</style>
+</head>
+<body>
+<div class="bg-gradients"></div>
+
+<nav class="navbar" id="navbar">
+  <a href="index.html" class="nav-logo">Board<span style="-webkit-text-fill-color:var(--txt2);font-family:var(--s);font-size:.9rem;font-weight:400;margin-left:3px">Verse</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="ludo.html">Ludo</a></li>
+    <li><a href="snakes.html" class="active">Snake &amp; Ladder</a></li>
+    <li><button class="nav-links-btn sound-toggle" onclick="toggleSound()" aria-label="Toggle Sound" aria-pressed="false">🔇 Sound Off</button></li>
+    <li><button class="nav-links-btn" onclick="document.body.classList.toggle('high-contrast')" aria-label="Toggle High Contrast">🌓 Contrast</button></li>
+    <li><a href="index.html" class="nav-cta">← Back to Home</a></li>
+  </ul>
+  <div class="nav-ham" id="ham"><span></span><span></span><span></span></div>
+</nav>
+
+<div class="game-page page-in">
+  <div class="game-header">
+    <h1>🐍 Snake &amp; Ladder</h1>
+    <p>Climb the ladders of fortune. Beware the serpents of fate. Race to square 100!</p>
+  </div>
+
+  <div class="game-layout">
+    <!-- Left sidebar -->
+    <aside class="g-sidebar">
+      <div class="g-panel">
+        <h3>🎲 Roll</h3>
+        <div class="ludo-dice-wrap">
+          <div class="ludo-dice-container">
+            <div class="ludo-dice" id="ludo-dice" onclick="rollDice()" title="Click to roll">
+              <div class="face front"><div class="dot"></div></div>
+              <div class="face top"><div class="dot"></div><div class="dot"></div></div>
+              <div class="face right"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+              <div class="face left">
+                <div class="dot"></div><div class="dot"></div>
+                <div class="dot"></div><div class="dot"></div>
+              </div>
+              <div class="face bottom">
+                <div class="dot"></div><div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div><div class="dot"></div>
+              </div>
+              <div class="face back">
+                <div class="dot"></div><div class="dot"></div>
+                <div class="dot"></div><div class="dot"></div>
+                <div class="dot"></div><div class="dot"></div>
+              </div>
+            </div>
+          </div>
+          <div class="dice-val" id="diceVal">—</div>
+          <button class="ctrl-btn ctrl-primary" id="rollBtn" onclick="rollDice()">Roll Dice</button>
+        </div>
+      </div>
+      <div class="g-panel">
+        <h3>📜 Game Log</h3>
+        <div class="g-log" id="gameLog"></div>
+      </div>
+    </aside>
+
+    <!-- Board -->
+    <div class="snakes-board-wrap">
+      <div class="snakes-board-container">
+        <div class="snakes-popup" id="snakesPopup" style="display:none">
+          <span id="popupEmoji">🐍</span>
+          <span id="popupText">Oh no! Slid down!</span>
+        </div>
+        <div id="snakes-board" class="snakes-board"></div>
+        <svg id="snakes-svg" viewBox="0 0 1000 1000" class="snakes-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+    </div>
+
+    <!-- Right sidebar -->
+    <aside class="g-sidebar">
+      <div class="g-panel">
+        <h3>👑 Players</h3>
+        <div id="playerCards"></div>
+        <div class="status" id="statusMsg">Red's turn — Roll!</div>
+      </div>
+      <div class="g-panel">
+        <h3>⚙ Controls</h3>
+        <button class="ctrl-btn ctrl-primary" onclick="showStartScreen()">New Game</button>
+        <button class="ctrl-btn ctrl-sec" onclick="initGame()">Reset Game</button>
+        <a href="index.html" class="ctrl-btn ctrl-sec" style="display:block; text-align:center; box-sizing:border-box">Home</a>
+      </div>
+      <div class="g-panel">
+        <h3>📖 How to Play</h3>
+        <p style="font-size:.78rem;color:var(--txt2);line-height:1.6">
+          🎲 Roll and advance your token<br>
+          🪜 Land on ladder base — climb up!<br>
+          🐍 Land on snake head — slide down!<br>
+          🏆 First to reach exactly 100 wins!<br>
+          ↩️ Overshoot? Bounce back from 100!
+        </p>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<footer>
+  <span class="f-logo">BoardVerse</span>
+  <span class="f-text">© 2026 BoardVerse</span>
+  <nav class="f-links"><a href="index.html">Home</a><a href="ludo.html">Ludo</a></nav>
+</footer>
+
+<div class="ludo-start-overlay" id="startOverlay" style="display:flex">
+  <div class="ludo-start-card">
+    <h2 class="ludo-start-title">Select Players</h2>
+    <p class="ludo-start-sub">Choose how many champions will battle in the BoardVerse Snakes Arena</p>
+    <div class="ludo-start-options">
+      <button class="btn btn-gold" onclick="selectPlayers(2)">🎲 &nbsp;2 Players</button>
+      <button class="btn btn-gold" onclick="selectPlayers(3)">🎲 &nbsp;3 Players</button>
+      <button class="btn btn-gold" onclick="selectPlayers(4)">🎲 &nbsp;4 Players</button>
+    </div>
+  </div>
+</div>
+
+<div class="win-overlay" id="winOverlay" style="display:none">
+  <canvas id="confetti-canvas" style="position:absolute; inset:0; pointer-events:none; z-index:2100; width:100%; height:100%"></canvas>
+  <div class="win-card" style="position:relative; z-index:2200">
+    <div class="win-icon">🏆</div>
+    <div class="win-title" id="winTitle">Player Wins!</div>
+    <div class="win-sub" id="winSub">Congratulations, Champion!</div>
+    <div class="win-actions">
+      <button class="btn btn-gold" onclick="initGame()">Play Again</button>
+      <a href="index.html" class="btn btn-outline">Home</a>
+    </div>
+  </div>
+</div>
+
+<script src="audio.js"></script>
+<script src="snakes.js"></script>
+</body>
+</html>
